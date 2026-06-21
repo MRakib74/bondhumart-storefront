@@ -5,9 +5,7 @@ import Link from "next/link";
 import { useCart } from "@/context/CartContext";
 
 export default function CheckoutPage() {
-  const { cart, cartTotal, removeFromCart, updateQuantity } = useCart();
-  const deliveryCharge = 60; // Dhaka
-  const grandTotal = cartTotal + deliveryCharge;
+  const { cart, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -15,6 +13,9 @@ export default function CheckoutPage() {
     address: "",
     delivery_area: "dhaka",
   });
+
+  const deliveryCharge = formData.delivery_area === 'dhaka' ? 60 : 120;
+  const grandTotal = cartTotal + deliveryCharge;
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -25,37 +26,35 @@ export default function CheckoutPage() {
     setError("");
     if (cart.length === 0) return;
 
-    // Validation Rules
+    // Advanced Validation Rules
     const phoneRegex = /^01[3-9]\d{8}$/;
     if (!phoneRegex.test(formData.phone)) {
       setError("দয়া করে সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন: 017XXXXXXXX)।");
       return;
     }
-    if (formData.name.trim().length < 3) {
-      setError("দয়া করে আপনার সম্পূর্ণ নাম সঠিকভাবে লিখুন।");
+    
+    const nameStr = formData.name.trim();
+    if (nameStr.length < 4 || /(.)\1{2,}/.test(nameStr)) {
+      setError("দয়া করে আপনার সঠিক নাম লিখুন (ভুল বা হাবিজাবি নাম গ্রহণযোগ্য নয়)।");
       return;
     }
-    if (formData.address.trim().length < 10) {
-      setError("দয়া করে সম্পূর্ণ ঠিকানা বিস্তারিতভাবে লিখুন যাতে ডেলিভারি ম্যান সহজে খুঁজে পায়।");
+    
+    const addressStr = formData.address.trim();
+    if (addressStr.length < 10 || !/\s/.test(addressStr) || /(.)\1{3,}/.test(addressStr)) {
+      setError("দয়া করে আপনার সম্পূর্ণ ও সঠিক ঠিকানা বিস্তারিতভাবে লিখুন (যেমন: বাসা নং, এলাকা)।");
       return;
     }
 
     setIsSubmitting(true);
     
-    // Simulate API call to Laravel
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+    // Simulate Superfast API call (300ms)
+    await new Promise((resolve) => setTimeout(resolve, 300));
     
-    // Placeholder for actual Laravel API integration:
-    /*
-    await fetch('https://bondhumart.cloud/api/orders', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ ...formData, items: cart, total: grandTotal })
-    })
-    */
-
+    // Placeholder for actual Laravel API integration
+    
     setSuccess(true);
     setIsSubmitting(false);
+    clearCart(); // Clear cart after successful order
   };
 
   if (success) {
