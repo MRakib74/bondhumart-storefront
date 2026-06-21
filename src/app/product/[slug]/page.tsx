@@ -145,7 +145,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
             <button 
               onClick={() => {
-                addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity }, false);
+                const item = { id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity };
+                sessionStorage.setItem('bondhumart_buynow', JSON.stringify(item));
                 window.location.href = '/checkout';
               }}
               className="flex-1 py-4 bg-[#00276c] hover:bg-black text-white text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg"
