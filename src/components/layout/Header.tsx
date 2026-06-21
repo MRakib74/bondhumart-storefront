@@ -117,8 +117,6 @@ export default function Header() {
           ফ্যাশন
         </Link>
       </div>
-
-      </div>
     </>
   )
 }
