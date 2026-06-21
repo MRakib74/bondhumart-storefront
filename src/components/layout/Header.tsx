@@ -29,7 +29,7 @@ export default function Header() {
       )}
 
       {/* Mobile Header */}
-      <div className="header-mobile">
+      <div className={`header-mobile ${isCheckout ? 'py-2' : ''}`}>
         <div className="flex justify-between items-center">
           <i className="fas fa-bars text-2xl cursor-pointer" onClick={toggleMobileMenu}></i>
           <div className="text-center">
