@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { useCart, CartItem } from "@/context/CartContext";
+import * as fpixel from '@/lib/fpixel';
 
 export default function CheckoutPage() {
   const { cart, cartTotal, removeFromCart, updateQuantity, clearCart } = useCart();
@@ -17,6 +18,9 @@ export default function CheckoutPage() {
         setBuyNowItem(JSON.parse(stored));
       } catch {}
     }
+
+    // Fire InitiateCheckout when checkout loads
+    fpixel.event('InitiateCheckout');
   }, []);
 
   const [formData, setFormData] = useState({
@@ -69,6 +73,18 @@ export default function CheckoutPage() {
     await new Promise((resolve) => setTimeout(resolve, 300));
     setSuccess(true);
     setIsSubmitting(false);
+
+    // Fire Purchase event
+    const contentIds = orderItems.map(item => item.id.toString());
+    fpixel.event('Purchase', {
+      content_name: 'Bondhumart Order',
+      content_ids: contentIds,
+      content_type: 'product',
+      value: grandTotal,
+      currency: 'BDT',
+      num_items: orderItems.length
+    });
+
     sessionStorage.removeItem("bondhumart_buynow");
     if (!buyNowItem) clearCart();
   };

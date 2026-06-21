@@ -1,7 +1,8 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useCart } from "@/context/CartContext"
+import * as fpixel from '@/lib/fpixel'
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
   const { addToCart } = useCart()
@@ -35,6 +36,46 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const [selectedColor, setSelectedColor] = useState(product.colors[0])
   const [selectedBundle, setSelectedBundle] = useState(bundles[0].id)
   const [quantity, setQuantity] = useState(1)
+
+  useEffect(() => {
+    // Fire ViewContent when product details are loaded
+    fpixel.event('ViewContent', {
+      content_name: product.name,
+      content_ids: [params.slug],
+      content_type: 'product',
+      value: parseInt(product.price.replace(',', '')),
+      currency: 'BDT'
+    });
+  }, [params.slug, product.name, product.price]);
+
+  const handleBuyNow = () => {
+    const item = { id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity };
+    
+    fpixel.event('AddToCart', {
+      content_name: product.name,
+      content_ids: [item.id],
+      content_type: 'product',
+      value: item.price * quantity,
+      currency: 'BDT'
+    });
+
+    sessionStorage.setItem('bondhumart_buynow', JSON.stringify(item));
+    window.location.href = '/checkout';
+  };
+
+  const handleAddToCart = () => {
+    const item = { id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity };
+    
+    fpixel.event('AddToCart', {
+      content_name: product.name,
+      content_ids: [item.id],
+      content_type: 'product',
+      value: item.price * quantity,
+      currency: 'BDT'
+    });
+
+    addToCart(item);
+  };
 
   return (
     <div className="bg-white rounded-xl shadow-sm p-4 md:p-8 mb-10 mt-5">
@@ -144,17 +185,13 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
             <button 
-              onClick={() => {
-                const item = { id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity };
-                sessionStorage.setItem('bondhumart_buynow', JSON.stringify(item));
-                window.location.href = '/checkout';
-              }}
+              onClick={handleBuyNow}
               className="flex-1 py-4 bg-[#00276c] hover:bg-black text-white text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg"
             >
               <i className="fas fa-shopping-bag"></i> এখনই অর্ডার করুন
             </button>
             <button 
-              onClick={() => addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity })}
+              onClick={handleAddToCart}
               className="flex-1 py-4 bg-[#f8f9fa] hover:bg-gray-200 text-[#292930] border border-gray-200 text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2"
             >
               <i className="fas fa-cart-plus text-[#319b03]"></i> কার্টে যোগ করুন

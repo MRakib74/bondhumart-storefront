@@ -5,6 +5,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import Providers from "@/components/Providers";
 import CartDrawer from "@/components/cart/CartDrawer";
+import Pixel from "@/components/Pixel";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -34,6 +35,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Pixel />
         <Providers>
           <Header />
           <main className="container mt-5 min-h-[50vh]">
