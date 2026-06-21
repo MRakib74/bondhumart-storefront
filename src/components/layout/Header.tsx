@@ -2,16 +2,17 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { useCart } from "@/context/CartContext"
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const [isCartOpen, setIsCartOpen] = useState(false)
+  const { cart, setIsCartOpen } = useCart()
 
   // In Next.js we use state to manage the drawers instead of raw DOM manipulation
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
-  const toggleCart = () => setIsCartOpen(!isCartOpen)
+  const toggleCart = () => setIsCartOpen(true)
 
-  const cartCount = 0 // Will connect to Zustand later
+  const cartCount = cart.reduce((acc, item) => acc + item.quantity, 0)
 
   return (
     <>
@@ -92,11 +93,11 @@ export default function Header() {
       </div>
 
       {/* Overlay */}
-      {(isMobileMenuOpen || isCartOpen) && (
+      {isMobileMenuOpen && (
         <div 
           id="masterOverlay" 
           style={{ display: 'block' }}
-          onClick={() => { setIsMobileMenuOpen(false); setIsCartOpen(false); }}
+          onClick={() => setIsMobileMenuOpen(false)}
         ></div>
       )}
 
@@ -117,30 +118,6 @@ export default function Header() {
         </Link>
       </div>
 
-      {/* Cart Sidebar */}
-      <div id="cartSidebar" style={{ right: isCartOpen ? 0 : '-400px' }}>
-        <div className="p-5 border-b border-[#eee] flex justify-between items-center">
-          <h3 className="m-0">Cart review</h3>
-          <i className="fas fa-times cursor-pointer text-xl" onClick={toggleCart}></i>
-        </div>
-        
-        <div className="flex-1 overflow-y-auto p-4">
-          {cartCount === 0 ? (
-            <p className="text-center text-gray-500 mt-10">আপনার কার্ট খালি!</p>
-          ) : (
-            <div>Cart items will go here</div>
-          )}
-        </div>
-
-        <div className="p-5 pb-[60px] border-t border-[#eee] bg-white">
-          <div className="flex justify-between font-bold text-lg mb-4">
-            <span>Total:</span>
-            <span>৳ 0</span>
-          </div>
-          <Link href="/checkout" className="block bg-[#319b03] text-white text-center p-4 rounded-lg no-underline font-bold text-lg" onClick={toggleCart}>
-            অর্ডার সম্পন্ন করুন
-          </Link>
-        </div>
       </div>
     </>
   )

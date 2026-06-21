@@ -1,33 +1,38 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useCart } from "@/context/CartContext";
 
 export default function Home() {
+  const { addToCart } = useCart();
+  
   const trendingProducts = [
     {
       id: 1,
       name: "Smart Watch Pro",
-      price: "2,500",
+      price: 2500,
       image: "https://placehold.co/400x400/eeeeee/333333?text=Smart+Watch",
       slug: "smart-watch-pro"
     },
     {
       id: 2,
       name: "Wireless Earbuds",
-      price: "1,200",
+      price: 1200,
       image: "https://placehold.co/400x400/eeeeee/333333?text=Earbuds",
       slug: "wireless-earbuds"
     },
     {
       id: 3,
       name: "Power Bank 20000mAh",
-      price: "1,800",
+      price: 1800,
       image: "https://placehold.co/400x400/eeeeee/333333?text=Power+Bank",
       slug: "power-bank"
     },
     {
       id: 4,
       name: "Bluetooth Speaker",
-      price: "900",
+      price: 900,
       image: "https://placehold.co/400x400/eeeeee/333333?text=Speaker",
       slug: "bluetooth-speaker"
     }
@@ -70,7 +75,10 @@ export default function Home() {
                 <div className="text-[16px] font-bold text-[#00276c] mb-3">
                   ৳{product.price}
                 </div>
-                <button className="w-full text-center p-3 bg-[#00276c] hover:bg-black text-white rounded-md text-[14px] font-bold cursor-pointer transition-colors duration-200">
+                <button 
+                  onClick={() => addToCart({ ...product, quantity: 1 })}
+                  className="w-full text-center p-3 bg-[#00276c] hover:bg-black text-white rounded-md text-[14px] font-bold cursor-pointer transition-colors duration-200"
+                >
                   অর্ডার করুন
                 </button>
               </div>

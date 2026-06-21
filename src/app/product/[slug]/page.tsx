@@ -1,8 +1,11 @@
 "use client"
 
 import React, { useState } from 'react'
+import { useCart } from "@/context/CartContext"
 
 export default function ProductPage({ params }: { params: { slug: string } }) {
+  const { addToCart } = useCart()
+  
   const product = {
     name: "Premium Smart Watch Pro",
     price: "2,500",
@@ -140,10 +143,16 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
-            <button className="flex-1 py-4 bg-[#00276c] hover:bg-black text-white text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg">
+            <button 
+              onClick={() => addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity })}
+              className="flex-1 py-4 bg-[#00276c] hover:bg-black text-white text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg"
+            >
               <i className="fas fa-shopping-bag"></i> এখনই অর্ডার করুন
             </button>
-            <button className="flex-1 py-4 bg-[#f8f9fa] hover:bg-gray-200 text-[#292930] border border-gray-200 text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2">
+            <button 
+              onClick={() => addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity })}
+              className="flex-1 py-4 bg-[#f8f9fa] hover:bg-gray-200 text-[#292930] border border-gray-200 text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2"
+            >
               <i className="fas fa-cart-plus text-[#319b03]"></i> কার্টে যোগ করুন
             </button>
           </div>
