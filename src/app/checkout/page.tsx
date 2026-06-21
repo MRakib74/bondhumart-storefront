@@ -20,28 +20,33 @@ export default function CheckoutPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState("");
+  const [errorFields, setErrorFields] = useState<string[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setErrorFields([]);
     if (cart.length === 0) return;
 
     // Advanced Validation Rules
     const phoneRegex = /^01[3-9]\d{8}$/;
     if (!phoneRegex.test(formData.phone)) {
       setError("দয়া করে সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন: 017XXXXXXXX)।");
+      setErrorFields(["phone"]);
       return;
     }
     
     const nameStr = formData.name.trim();
     if (nameStr.length < 4 || /(.)\1{2,}/.test(nameStr)) {
       setError("দয়া করে আপনার সঠিক নাম লিখুন (ভুল বা হাবিজাবি নাম গ্রহণযোগ্য নয়)।");
+      setErrorFields(["name"]);
       return;
     }
     
     const addressStr = formData.address.trim();
     if (addressStr.length < 10 || !/\s/.test(addressStr) || /(.)\1{3,}/.test(addressStr)) {
       setError("দয়া করে আপনার সম্পূর্ণ ও সঠিক ঠিকানা বিস্তারিতভাবে লিখুন (যেমন: বাসা নং, এলাকা)।");
+      setErrorFields(["address"]);
       return;
     }
 
@@ -89,26 +94,26 @@ export default function CheckoutPage() {
             </h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">আপনার নাম *</label>
+                <label className={`block text-sm font-bold mb-1 ${errorFields.includes("name") ? "text-red-500" : "text-gray-700"}`}>আপনার নাম *</label>
                 <input 
                   type="text" 
                   required
                   placeholder="সম্পূর্ণ নাম লিখুন"
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#319b03] transition-colors bg-gray-50 focus:bg-white"
+                  className={`w-full p-3 border rounded-lg outline-none transition-colors bg-gray-50 focus:bg-white ${errorFields.includes("name") ? "border-red-500 focus:border-red-500 bg-red-50" : "border-gray-200 focus:border-[#319b03]"}`}
                   value={formData.name}
-                  onChange={(e) => setFormData({...formData, name: e.target.value})}
+                  onChange={(e) => { setFormData({...formData, name: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'name')); setError(''); }}
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">মোবাইল নাম্বার *</label>
+                <label className={`block text-sm font-bold mb-1 ${errorFields.includes("phone") ? "text-red-500" : "text-gray-700"}`}>মোবাইল নাম্বার *</label>
                 <input 
                   type="tel" 
                   required
                   placeholder="01XXXXXXXXX"
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#319b03] transition-colors bg-gray-50 focus:bg-white"
+                  className={`w-full p-3 border rounded-lg outline-none transition-colors bg-gray-50 focus:bg-white ${errorFields.includes("phone") ? "border-red-500 focus:border-red-500 bg-red-50" : "border-gray-200 focus:border-[#319b03]"}`}
                   value={formData.phone}
-                  onChange={(e) => setFormData({...formData, phone: e.target.value})}
+                  onChange={(e) => { setFormData({...formData, phone: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'phone')); setError(''); }}
                 />
               </div>
 
@@ -139,14 +144,14 @@ export default function CheckoutPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-bold text-gray-700 mb-1">সম্পূর্ণ ঠিকানা *</label>
+                <label className={`block text-sm font-bold mb-1 ${errorFields.includes("address") ? "text-red-500" : "text-gray-700"}`}>সম্পূর্ণ ঠিকানা *</label>
                 <textarea 
                   required
                   placeholder="বাসা নং, রোড নং, এলাকা, থানা, জেলা"
                   rows={3}
-                  className="w-full p-3 border border-gray-200 rounded-lg outline-none focus:border-[#319b03] transition-colors bg-gray-50 focus:bg-white resize-none"
+                  className={`w-full p-3 border rounded-lg outline-none transition-colors bg-gray-50 focus:bg-white resize-none ${errorFields.includes("address") ? "border-red-500 focus:border-red-500 bg-red-50" : "border-gray-200 focus:border-[#319b03]"}`}
                   value={formData.address}
-                  onChange={(e) => setFormData({...formData, address: e.target.value})}
+                  onChange={(e) => { setFormData({...formData, address: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'address')); setError(''); }}
                 />
               </div>
 
