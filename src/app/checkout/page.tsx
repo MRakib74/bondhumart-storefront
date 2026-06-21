@@ -92,7 +92,8 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-5xl mx-auto my-4 px-3">
-      <div className="flex flex-col lg:flex-row gap-5">
+      {/* flex-col-reverse makes Cart Items appear first on Mobile, but lg:flex-row keeps them on the right on Desktop */}
+      <div className="flex flex-col-reverse lg:flex-row gap-5">
 
         {/* Left: Form */}
         <div className="w-full lg:w-3/5">
@@ -204,58 +205,49 @@ export default function CheckoutPage() {
               {orderItems.length === 0 ? (
                 <p className="text-center text-gray-400 text-sm py-6">কোনো আইটেম নেই</p>
               ) : buyNowItem ? (
-                /* Buy Now আইটেম - শুধু quantity পরিবর্তন, X নেই */
-                <div className="bg-white rounded-lg border border-gray-100 p-3">
-                  {/* উপরে: নাম + X */}
-                  <div className="flex justify-between items-start gap-2 mb-2">
-                    <div className="flex gap-2 flex-1 min-w-0">
-                      <img src={buyNowItem.image} alt={buyNowItem.name} className="w-12 h-12 object-cover rounded-md bg-gray-50 flex-shrink-0" />
-                      <div className="min-w-0">
-                        <h4 className="text-xs font-medium text-gray-800 line-clamp-2">{buyNowItem.name}</h4>
-                        <span className="font-bold text-[#319b03] text-sm">৳{buyNowItem.price}</span>
+                /* Buy Now আইটেম */
+                <div className="bg-white rounded-lg border border-gray-100 p-3 relative flex gap-3">
+                  <img src={buyNowItem.image} alt={buyNowItem.name} className="w-16 h-16 object-cover rounded-md bg-gray-50 flex-shrink-0" />
+                  <div className="flex-grow min-w-0 pr-6 lg:pr-0">
+                    <h4 className="text-sm font-medium text-gray-800 line-clamp-2 lg:line-clamp-1">{buyNowItem.name}</h4>
+                    <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mt-2 gap-2 lg:gap-0">
+                      <span className="font-bold text-[#319b03] text-sm">৳{buyNowItem.price}</span>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center bg-gray-50 border border-gray-200 rounded">
+                          <button onClick={() => setBuyNowQuantity(Math.max(1, buyNowQuantity - 1))} className="px-2.5 py-1 text-gray-500 hover:text-black font-bold">-</button>
+                          <span className="px-3 text-sm font-bold border-x border-gray-200">{buyNowQuantity}</span>
+                          <button onClick={() => setBuyNowQuantity(buyNowQuantity + 1)} className="px-2.5 py-1 text-gray-500 hover:text-black font-bold">+</button>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                  {/* নিচে: কোয়ান্টিটি */}
-                  <div className="flex items-center gap-2 mt-1">
-                    <span className="text-xs text-gray-500">পরিমাণ:</span>
-                    <div className="flex items-center bg-gray-50 border border-gray-200 rounded">
-                      <button onClick={() => setBuyNowQuantity(Math.max(1, buyNowQuantity - 1))} className="px-2.5 py-1 text-gray-500 hover:text-black text-sm font-bold">-</button>
-                      <span className="px-3 text-sm font-bold border-x border-gray-200">{buyNowQuantity}</span>
-                      <button onClick={() => setBuyNowQuantity(buyNowQuantity + 1)} className="px-2.5 py-1 text-gray-500 hover:text-black text-sm font-bold">+</button>
                     </div>
                   </div>
                 </div>
               ) : (
-                /* Cart আইটেম - X উপরে, কোয়ান্টিটি নিচে আলাদা */
+                /* Cart আইটেম */
                 cart.map(item => (
-                  <div key={item.id} className="bg-white rounded-lg border border-gray-100 p-3">
-                    {/* উপরে: ছবি + নাম + X */}
-                    <div className="flex justify-between items-start gap-2 mb-2">
-                      <div className="flex gap-2 flex-1 min-w-0">
-                        <img src={item.image} alt={item.name} className="w-12 h-12 object-cover rounded-md bg-gray-50 flex-shrink-0" />
-                        <div className="min-w-0">
-                          <h4 className="text-xs font-medium text-gray-800 line-clamp-2">{item.name}</h4>
-                          <span className="font-bold text-[#319b03] text-sm">৳{item.price}</span>
+                  <div key={item.id} className="bg-white rounded-lg border border-gray-100 p-3 relative flex gap-3">
+                    <img src={item.image} alt={item.name} className="w-16 h-16 object-cover rounded-md bg-gray-50 flex-shrink-0" />
+                    <div className="flex-grow min-w-0 pr-6 lg:pr-0">
+                      <h4 className="text-sm font-medium text-gray-800 line-clamp-2 lg:line-clamp-1">{item.name}</h4>
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center mt-2 gap-2 lg:gap-0">
+                        <span className="font-bold text-[#319b03] text-sm">৳{item.price}</span>
+                        <div className="flex items-center gap-3">
+                          <div className="flex items-center bg-gray-50 border border-gray-200 rounded">
+                            <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-2.5 py-1 text-gray-500 hover:text-black font-bold">-</button>
+                            <span className="px-3 text-sm font-bold border-x border-gray-200">{item.quantity}</span>
+                            <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-2.5 py-1 text-gray-500 hover:text-black font-bold">+</button>
+                          </div>
+                          {/* Desktop X button */}
+                          <button onClick={() => removeFromCart(item.id)} className="hidden lg:block text-red-400 hover:text-red-600 px-1">
+                            <i className="fa-solid fa-times"></i>
+                          </button>
                         </div>
                       </div>
-                      {/* X বাটন - উপরে ডানে, আলাদা */}
-                      <button
-                        onClick={() => removeFromCart(item.id)}
-                        className="w-6 h-6 flex-shrink-0 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600 transition-colors"
-                      >
-                        <i className="fa-solid fa-times text-xs"></i>
-                      </button>
                     </div>
-                    {/* নিচে: কোয়ান্টিটি - X থেকে আলাদা, নিজস্ব লাইনে */}
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className="text-xs text-gray-500">পরিমাণ:</span>
-                      <div className="flex items-center bg-gray-50 border border-gray-200 rounded">
-                        <button onClick={() => updateQuantity(item.id, item.quantity - 1)} className="px-2.5 py-1 text-gray-500 hover:text-black text-sm font-bold">-</button>
-                        <span className="px-3 text-sm font-bold border-x border-gray-200">{item.quantity}</span>
-                        <button onClick={() => updateQuantity(item.id, item.quantity + 1)} className="px-2.5 py-1 text-gray-500 hover:text-black text-sm font-bold">+</button>
-                      </div>
-                    </div>
+                    {/* Mobile X button */}
+                    <button onClick={() => removeFromCart(item.id)} className="absolute top-2 right-2 lg:hidden w-6 h-6 flex items-center justify-center rounded-full bg-red-50 text-red-400 hover:bg-red-100 hover:text-red-600">
+                      <i className="fa-solid fa-times text-xs"></i>
+                    </button>
                   </div>
                 ))
               )}
