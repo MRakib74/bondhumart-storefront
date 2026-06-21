@@ -16,8 +16,10 @@ export default function Header() {
   return (
     <>
       {/* Top Marquee */}
-      <div className="top-notice bg-[#319b03] text-white py-2 text-sm text-center font-bold overflow-hidden">
-        <marquee>Bondhumart অনলাইনে শপে আপনাকে স্বাগতম।।</marquee>
+      <div className="top-notice bg-[#319b03] text-white py-2 text-sm text-center font-bold">
+        <div className="overflow-hidden whitespace-nowrap">
+          <div className="animate-marquee inline-block">Bondhumart অনলাইনে শপে আপনাকে স্বাগতম।।</div>
+        </div>
       </div>
 
       {/* Mobile Header */}
