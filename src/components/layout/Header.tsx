@@ -2,11 +2,14 @@
 
 import React, { useState } from 'react'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { useCart } from "@/context/CartContext"
 
 export default function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
   const { cart, setIsCartOpen } = useCart()
+  const pathname = usePathname()
+  const isCheckout = pathname === '/checkout'
 
   // In Next.js we use state to manage the drawers instead of raw DOM manipulation
   const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -17,11 +20,13 @@ export default function Header() {
   return (
     <>
       {/* Top Marquee */}
-      <div className="top-notice bg-[#319b03] text-white py-2 text-sm text-center font-bold">
-        <div className="overflow-hidden whitespace-nowrap">
-          <div className="animate-marquee inline-block">Bondhumart অনলাইনে শপে আপনাকে স্বাগতম।।</div>
+      {!isCheckout && (
+        <div className="top-notice bg-[#319b03] text-white py-2 text-sm text-center font-bold">
+          <div className="overflow-hidden whitespace-nowrap">
+            <div className="animate-marquee inline-block">Bondhumart অনলাইনে শপে আপনাকে স্বাগতম।।</div>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Mobile Header */}
       <div className="header-mobile">
@@ -42,12 +47,14 @@ export default function Header() {
         </div>
         
         {/* Mobile Search */}
-        <div className="search-wrapper mt-2">
-          <div className="search-box m-0">
-            <input type="text" placeholder="পণ্য খুঁজুন..." />
-            <button><i className="fas fa-search"></i></button>
+        {!isCheckout && (
+          <div className="search-wrapper mt-2">
+            <div className="search-box m-0">
+              <input type="text" placeholder="পণ্য খুঁজুন..." />
+              <button><i className="fas fa-search"></i></button>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Desktop Header */}
@@ -57,12 +64,14 @@ export default function Header() {
         </Link>
         
         {/* Desktop Search */}
-        <div className="search-wrapper w-[500px]">
-          <div className="search-box m-0">
-            <input type="text" placeholder="পণ্য খুঁজুন..." />
-            <button><i className="fas fa-search"></i></button>
+        {!isCheckout && (
+          <div className="search-wrapper w-[500px]">
+            <div className="search-box m-0">
+              <input type="text" placeholder="পণ্য খুঁজুন..." />
+              <button><i className="fas fa-search"></i></button>
+            </div>
           </div>
-        </div>
+        )}
         
         <div className="flex gap-4 items-center cursor-pointer" onClick={toggleCart}>
           <div className="relative">

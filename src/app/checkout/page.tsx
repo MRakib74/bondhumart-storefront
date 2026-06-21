@@ -82,8 +82,6 @@ export default function CheckoutPage() {
 
   return (
     <div className="max-w-6xl mx-auto my-10">
-      <h1 className="text-2xl font-bold mb-8 text-[#00276c] border-b pb-4">নিরাপদ চেকআউট</h1>
-
       <div className="flex flex-col lg:flex-row gap-8">
         
         {/* Left Form */}
