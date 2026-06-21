@@ -144,7 +144,10 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 mt-4">
             <button 
-              onClick={() => addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity })}
+              onClick={() => {
+                addToCart({ id: parseInt(params.slug) || 1, name: product.name, price: parseInt(product.price.replace(',', '')), image: product.images[0], quantity: quantity }, false);
+                window.location.href = '/checkout';
+              }}
               className="flex-1 py-4 bg-[#00276c] hover:bg-black text-white text-lg font-bold rounded-lg transition-colors flex justify-center items-center gap-2 shadow-lg"
             >
               <i className="fas fa-shopping-bag"></i> এখনই অর্ডার করুন

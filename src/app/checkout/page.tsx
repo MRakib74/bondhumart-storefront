@@ -18,10 +18,27 @@ export default function CheckoutPage() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
     if (cart.length === 0) return;
+
+    // Validation Rules
+    const phoneRegex = /^01[3-9]\d{8}$/;
+    if (!phoneRegex.test(formData.phone)) {
+      setError("দয়া করে সঠিক ১১ ডিজিটের মোবাইল নাম্বার দিন (যেমন: 017XXXXXXXX)।");
+      return;
+    }
+    if (formData.name.trim().length < 3) {
+      setError("দয়া করে আপনার সম্পূর্ণ নাম সঠিকভাবে লিখুন।");
+      return;
+    }
+    if (formData.address.trim().length < 10) {
+      setError("দয়া করে সম্পূর্ণ ঠিকানা বিস্তারিতভাবে লিখুন যাতে ডেলিভারি ম্যান সহজে খুঁজে পায়।");
+      return;
+    }
 
     setIsSubmitting(true);
     
@@ -138,6 +155,13 @@ export default function CheckoutPage() {
                 <i className="fa-solid fa-circle-info mt-1"></i>
                 <p className="text-sm">ক্যাশ অন ডেলিভারি - পণ্য হাতে পেয়ে পেমেন্ট করুন। কোনো অগ্রিম পেমেন্টের প্রয়োজন নেই।</p>
               </div>
+
+              {error && (
+                <div className="bg-red-50 text-red-600 p-4 rounded-lg flex items-start gap-3 mt-4 border border-red-200">
+                  <i className="fa-solid fa-triangle-exclamation mt-1"></i>
+                  <p className="text-sm font-medium">{error}</p>
+                </div>
+              )}
 
               <button 
                 type="submit" 

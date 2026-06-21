@@ -76,7 +76,10 @@ export default function Home() {
                   ৳{product.price}
                 </div>
                 <button 
-                  onClick={() => addToCart({ ...product, quantity: 1 })}
+                  onClick={() => {
+                    addToCart({ ...product, quantity: 1 }, false);
+                    window.location.href = '/checkout';
+                  }}
                   className="w-full text-center p-3 bg-[#00276c] hover:bg-black text-white rounded-md text-[14px] font-bold cursor-pointer transition-colors duration-200"
                 >
                   অর্ডার করুন
