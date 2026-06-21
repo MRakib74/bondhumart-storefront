@@ -233,6 +233,16 @@ export default function CheckoutPage() {
                 </div>
 
                 <div>
+                  <label className={`block text-xs font-bold mb-1 ${errorFields.includes("address") ? "text-red-500" : "text-gray-700"}`}>সম্পূর্ণ ঠিকানা *</label>
+                  <textarea
+                    required placeholder="বাসা নং, রোড নং, এলাকা, থানা, জেলা" rows={2}
+                    className={`w-full px-3 py-2 border rounded-lg outline-none text-sm transition-colors resize-none ${errorFields.includes("address") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50 focus:border-[#319b03] focus:bg-white"}`}
+                    value={formData.address}
+                    onChange={(e) => { setFormData({...formData, address: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'address')); setError(''); }}
+                  />
+                </div>
+
+                <div>
                   <label className="block text-xs font-bold text-gray-700 mb-1">ডেলিভারি চার্জ *</label>
                   <div className="grid grid-cols-2 gap-2">
                     <label className={`cursor-pointer border px-3 py-2 rounded-lg flex items-center gap-2 transition-colors ${formData.delivery_area === 'dhaka' ? 'border-[#319b03] bg-[#f0fdf4]' : 'border-gray-200 bg-gray-50'}`}>
@@ -246,16 +256,6 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                <div>
-                  <label className={`block text-xs font-bold mb-1 ${errorFields.includes("address") ? "text-red-500" : "text-gray-700"}`}>সম্পূর্ণ ঠিকানা *</label>
-                  <textarea
-                    required placeholder="বাসা নং, রোড নং, এলাকা, থানা, জেলা" rows={2}
-                    className={`w-full px-3 py-2 border rounded-lg outline-none text-sm transition-colors resize-none ${errorFields.includes("address") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50 focus:border-[#319b03] focus:bg-white"}`}
-                    value={formData.address}
-                    onChange={(e) => { setFormData({...formData, address: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'address')); setError(''); }}
-                  />
-                </div>
-
               </div>
 
               {error && (
@@ -265,15 +265,17 @@ export default function CheckoutPage() {
                 </div>
               )}
 
-              {/* Mobile Subtotal and Button goes outside form UI but works with form id */}
+              {/* Mobile Order Button (Inside Form, so it stays directly below Delivery Charge) */}
+              <div className="px-4 pb-4 lg:hidden mt-3">
+                 {renderOrderButton()}
+              </div>
 
             </form>
           </div>
           
-          {/* === MOBILE SUBTOTAL & BUTTON (Bottom) === */}
+          {/* === MOBILE SUBTOTAL (Bottom) === */}
           <div className="w-full lg:hidden mt-3 bg-white rounded-xl border border-gray-200 overflow-hidden shadow-sm">
              {renderSubtotal()}
-             {renderOrderButton()}
           </div>
         </div>
 
@@ -289,7 +291,10 @@ export default function CheckoutPage() {
 
             <div className="bg-white border-t border-gray-200">
                {renderSubtotal()}
-               {renderOrderButton()}
+               {/* Desktop Order Button (Below Subtotal) */}
+               <div className="px-4 pb-4">
+                 {renderOrderButton()}
+               </div>
             </div>
 
           </div>
