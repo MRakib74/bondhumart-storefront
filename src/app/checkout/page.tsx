@@ -70,7 +70,36 @@ export default function CheckoutPage() {
     }
 
     setIsSubmitting(true);
-    await new Promise((resolve) => setTimeout(resolve, 300));
+    
+    try {
+      const orderPayload = {
+        event: 'order.created',
+        data: {
+          customer: {
+            id: formData.phone,
+            phone: formData.phone,
+            name: formData.name,
+            district: formData.delivery_area,
+            address: formData.address,
+          },
+          order_id: Math.floor(Math.random() * 1000000), // Random order ID
+          product_id: orderItems[0]?.id || 0,
+          amount: grandTotal,
+        }
+      };
+
+      await fetch('https://home.bondhumart.xyz/api/webhook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer super_secret_bondhu_key_2024'
+        },
+        body: JSON.stringify(orderPayload)
+      });
+    } catch (e) {
+      console.error("Order submission failed:", e);
+    }
+
     setSuccess(true);
     setIsSubmitting(false);
 
