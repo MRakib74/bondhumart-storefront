@@ -1,21 +1,29 @@
 "use client";
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import { usePathname, useSearchParams } from 'next/navigation';
 import Script from 'next/script';
 import * as fpixel from '@/lib/fpixel';
 
-export default function Pixel() {
+function PixelEvents() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // This pageview only triggers the first time (it's important for Pixel to have real information)
     fpixel.pageview();
   }, [pathname, searchParams]);
 
+  return null;
+}
+
+export default function Pixel() {
   return (
     <>
+      <Suspense fallback={null}>
+        <PixelEvents />
+      </Suspense>
+
+
       <Script
         id="fb-pixel"
         strategy="afterInteractive"
