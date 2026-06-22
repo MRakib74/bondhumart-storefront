@@ -73,26 +73,22 @@ export default function CheckoutPage() {
     
     try {
       const orderPayload = {
-        event: 'order.created',
-        data: {
-          customer: {
-            id: formData.phone,
-            phone: formData.phone,
-            name: formData.name,
-            district: formData.delivery_area,
-            address: formData.address,
-          },
-          order_id: Math.floor(Math.random() * 1000000), // Random order ID
-          product_id: orderItems[0]?.id || 0,
-          amount: grandTotal,
-        }
+        customer: {
+          id: formData.phone,
+          phone: formData.phone,
+          name: formData.name,
+          district: formData.delivery_area,
+          address: formData.address,
+        },
+        order_id: Math.floor(Math.random() * 1000000), // Random order ID
+        product_id: orderItems[0]?.id || 0,
+        amount: grandTotal,
       };
 
-      await fetch('https://home.bondhumart.xyz/api/webhook', {
+      await fetch('/api/order', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer super_secret_bondhu_key_2024'
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify(orderPayload)
       });
