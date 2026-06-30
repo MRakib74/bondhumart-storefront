@@ -85,13 +85,20 @@ export default function CheckoutPage() {
         amount: grandTotal,
       };
 
-      await fetch('/api/order', {
+      const res = await fetch('/api/order', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(orderPayload)
       });
+      const resData = await res.json();
+      
+      if (resData.result?.error === 'BLOCKED') {
+        setError("আপনার নাম্বারটি সাময়িকভাবে স্থগিত করা হয়েছে। বিস্তারিত জানতে যোগাযোগ করুন।");
+        setIsSubmitting(false);
+        return;
+      }
     } catch (e) {
       console.error("Order submission failed:", e);
     }
