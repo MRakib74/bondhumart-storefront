@@ -270,6 +270,27 @@ export default function CheckoutPage() {
                     className={`w-full px-3 py-2 border rounded-lg outline-none text-sm transition-colors ${errorFields.includes("phone") ? "border-red-500 bg-red-50" : "border-gray-200 bg-gray-50 focus:border-[#319b03] focus:bg-white"}`}
                     value={formData.phone}
                     onChange={(e) => { setFormData({...formData, phone: e.target.value}); setErrorFields(errorFields.filter(f => f !== 'phone')); setError(''); }}
+                    onBlur={() => {
+                      if (/^01[3-9]\d{8}$/.test(formData.phone) && orderItems.length > 0 && !success && !isSubmitting) {
+                        const draftPayload = {
+                          customer: {
+                            id: formData.phone,
+                            phone: formData.phone,
+                            name: formData.name,
+                            district: formData.delivery_area,
+                            address: formData.address,
+                          },
+                          order_id: Math.floor(Math.random() * 1000000),
+                          product_id: orderItems[0]?.id || 0,
+                          amount: grandTotal,
+                        };
+                        fetch('/api/order/draft', {
+                          method: 'POST',
+                          headers: { 'Content-Type': 'application/json' },
+                          body: JSON.stringify(draftPayload)
+                        }).catch(() => {});
+                      }
+                    }}
                   />
                 </div>
 
